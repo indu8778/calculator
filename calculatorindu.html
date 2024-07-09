@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: right;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url(https://wallpaperset.com/w/full/d/2/f/366632.jpg) no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 5em; 
+            color: #fff;
+        }
+
+        .calculator {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .display {
+            background-color: #222;
+            color: #fff;
+            font-size: 2em;
+            text-align: right;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+        }
+
+        .btn {
+            border: none;
+            padding: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn.number {
+            background-color: #924DBF;
+        }
+
+        .btn.number:hover {
+            background-color: #F88379 ;
+        }
+
+        .btn.operator {
+            background-color: #AC5180;
+            color: white;
+        }
+
+        .btn.operator:hover {
+            background-color: #AC5180;
+        }
+
+        .btn.special {
+            background-color: #671B61;
+            color: white;
+        }
+
+        .btn.special:hover {
+            background-color: #FF9999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculator</h1>
+    <div class="calculator">
+        <div class="display" id="display"></div>
+        <div class="buttons">
+            <button class="btn special" id="clear">C</button>
+            <button class="btn operator" id="divide">/</button>
+            <button class="btn operator" id="multiply">*</button>
+            <button class="btn operator" id="subtract">-</button>
+            <button class="btn number">7</button>
+            <button class="btn number">8</button>
+            <button class="btn number">9</button>
+            <button class="btn operator" id="add">+</button>
+            <button class="btn number">4</button>
+            <button class="btn number">5</button>
+            <button class="btn number">6</button>
+            <button class="btn special" id="equals">=</button>
+            <button class="btn number">1</button>
+            <button class="btn number">2</button>
+            <button class="btn number">3</button>
+            <button class="btn number">0</button>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById('display');
+        let currentInput = '';
+        let operator = '';
+        let firstOperand = null;
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.innerText;
+
+                if (button.classList.contains('number')) {
+                    currentInput += value;
+                    display.innerText = currentInput;
+                } else if (value === 'C') {
+                    currentInput = '';
+                    operator = '';
+                    firstOperand = null;
+                    display.innerText = '';
+                } else if (value === '=') {
+                    if (firstOperand !== null && currentInput !== '') {
+                        currentInput = calculate(firstOperand, currentInput, operator);
+                        display.innerText = currentInput;
+                        firstOperand = null;
+                        operator = '';
+                    }
+                } else {
+                    if (firstOperand === null) {
+                        firstOperand = currentInput;
+                        operator = value;
+                        currentInput = '';
+                        display.innerText = firstOperand + ' ' + operator;
+                    } else if (currentInput !== '') {
+                        firstOperand = calculate(firstOperand, currentInput, operator);
+                        operator = value;
+                        currentInput = '';
+                        display.innerText = firstOperand + ' ' + operator;
+                    }
+                }
+            });
+        });
+
+        function calculate(operand1, operand2, operator) {
+            const num1 = parseFloat(operand1);
+            const num2 = parseFloat(operand2);
+            switch (operator) {
+                case '+':
+                    return (num1 + num2).toString();
+                case '-':
+                    return (num1 - num2).toString();
+                case '*':
+                    return (num1 * num2).toString();
+                case '/':
+                    return (num1 / num2).toString();
+                default:
+                    return operand2;
+            }
+        }
+    </script>
+</body>
+</html>
